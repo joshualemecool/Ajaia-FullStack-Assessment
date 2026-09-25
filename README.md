@@ -2,6 +2,13 @@
 
 papertrail is a small collaborative document editor for the Ajaia AI-Native Full Stack Developer Assessment.
 
+## Live application
+
+- Frontend: https://ajaia-fullstack-assessment-joshua.vercel.app
+- API health: https://ajaia-fullstack-assessment-m6om.onrender.com/api/health
+
+Use the frontend URL to open the application. The Render URL is the backend API and health endpoint, not the user-facing site.
+
 ## Run locally
 
 Requirements: Node 24 or newer. SQLite is the default local database; MySQL remains available for deployment.
@@ -58,4 +65,4 @@ The deployment target is Vercel for `frontend/` and Render for `backend/`. The p
 3. Deploy `frontend/` on Vercel with `VITE_API_URL` set to the Render API URL without a trailing `/api`.
 4. Verify `https://your-api.example.com/api/health` returns `{ "ok": true, "database": "mysql" }` before opening the Vercel URL.
 
-Local development continues to use native SQLite unless `DB_CLIENT=mysql` is set. No live deployment is claimed until the provider URLs, database migration, authentication, upload, sharing, and production build are manually checked.
+The current deployment uses Vercel for the frontend, Render for the API, and Railway MySQL for production persistence. The Render pre-deploy migration is optional on free plans; migrations and seeding can be run locally against the Railway public MySQL endpoint instead. Local development continues to use native SQLite unless `DB_CLIENT=mysql` is set.
