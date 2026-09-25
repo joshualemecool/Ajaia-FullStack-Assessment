@@ -203,3 +203,83 @@ A dedicated Playwright test now verifies that all required formatting survives s
 AI handled the implementation, investigation, and test refinement. The developer reviewed the behavior, followed the debugging process, and validated the final approach.
 
 **Result:** Phase 5 complete and all required rich-text features are covered.
+
+# Phase 6 — Sharing & Authorization
+
+The sharing workflow was reviewed and tested end to end.
+
+AI verified:
+- Alice sharing a document with Bob
+- Bob seeing the document in `Shared With Me`
+- Bob opening the shared document
+- Bob editing and saving the document
+- Alice seeing Bob's persisted changes
+- Unauthorized sharing being rejected with `403`
+
+### Debugging
+
+The initial full test suite revealed that repeated test runs created duplicate documents with the same title, making a UI locator ambiguous.
+
+AI identified this as a test-data isolation issue rather than a sharing bug. The test was updated to use the exact document ID returned by the API, making the scenario deterministic and repeatable.
+
+### Decision
+
+The sharing model remains owner-based: the owner can grant access, while a shared user can read and edit the document but cannot share it further.
+
+The developer reviewed the authorization behavior and kept this permission model aligned with the assessment's simple sharing requirement.
+
+### Validation
+
+The focused sharing test passed, followed by the complete Playwright suite.
+
+The developer reviewed the results and validated both the functional workflow and the authorization boundary.
+
+**Result:** Phase 6 complete. Sharing, collaborative editing, persistence, and owner-only sharing permissions are covered by automated tests.
+# Phase 7 — File Import
+
+The existing `.txt` import workflow was reviewed and tested end to end.
+
+AI implemented and verified:
+- `.txt` file upload
+- Conversion of each line into an editable paragraph
+- Document title derived from the filename
+- Saving imported content
+- Content persistence after reload
+
+### Decision
+
+The import scope was intentionally limited to `.txt`, which satisfies the file-upload requirement without adding unnecessary parsing complexity.
+
+Markdown parsing was kept optional and was not expanded.
+
+### Validation
+
+A dedicated Playwright test verifies the complete flow:
+
+Upload → Editable content → Save → Reload → Content preserved.
+
+The full test suite was also executed successfully.
+
+The developer reviewed the implementation and validation results and confirmed the scope was sufficient for the assessment.
+
+
+# Phase 8 — Testing
+
+Testing was performed continuously throughout the previous phases rather than being postponed until the end.
+
+Each major feature was validated with a focused Playwright test as it was implemented:
+- Document creation, saving and reload
+- Rich-text formatting persistence
+- Sharing and authorization
+- Shared document editing
+- `.txt` import and persistence
+
+### Final Validation
+
+AI ran the complete Playwright suite twice consecutively to verify that the tests remained reliable with the persisted SQLite state and multi-user workflows.
+
+Both runs passed successfully.
+
+The developer reviewed the test coverage and results throughout the implementation rather than relying only on a final test pass.
+
+**Result:** Phase 8 complete. Full end-to-end test suite passes reliably.
