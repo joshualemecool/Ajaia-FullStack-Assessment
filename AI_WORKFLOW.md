@@ -283,3 +283,48 @@ Both runs passed successfully.
 The developer reviewed the test coverage and results throughout the implementation rather than relying only on a final test pass.
 
 **Result:** Phase 8 complete. Full end-to-end test suite passes reliably.
+
+# Phase 9 — Deployment Preparation
+
+The deployment-sensitive parts of the application were audited before deployment.
+
+### Architecture Decision
+
+The existing project already contains a MySQL production adapter, making it possible to keep the current database layer instead of introducing a new PostgreSQL adapter.
+
+The deployment architecture was therefore defined as:
+
+- **Frontend:** Vercel
+- **Backend:** Render
+- **Production database:** Hosted MySQL provider
+- **Local development:** SQLite
+
+This minimized production code changes while keeping the existing database abstraction.
+
+### Implementation
+
+AI prepared the project for deployment by:
+- Removing the frontend's hardcoded `localhost` API URL
+- Adding `VITE_API_URL` support
+- Adding a Vite local `/api` development proxy
+- Adding Vercel SPA configuration
+- Adding Render service configuration
+- Configuring production MySQL environment variables
+- Adding a Render health check
+- Adding `.env.example`
+- Documenting deployment steps in `README.md`
+
+During validation, the production-style build exposed a missing Vite environment type, which AI fixed. The configured API URL was also normalized to avoid trailing-slash issues.
+
+### Validation
+
+AI verified:
+- Existing local E2E tests
+- Production-style frontend build
+- Frontend build with a non-local API URL
+- Deployment configuration
+- Absence of a hardcoded production `localhost` API URL
+
+The developer reviewed the proposed architecture and chose the existing MySQL adapter as the production path to minimize unnecessary changes.
+
+**Important:** The application is deployment-ready, but not yet deployed. Provider configuration, MySQL credentials, and live URL verification are still required.
