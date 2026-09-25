@@ -77,3 +77,22 @@ test('shared user can open, edit, and persist a document', async ({ page, contex
   await page.reload();
   await expect(page.locator('.ProseMirror')).toContainText('Bob persisted edit');
 });
+
+test('imports a txt file as editable document content', async ({ page }) => {
+  await page.goto('/login');
+  await page.getByRole('button', { name: /continue/i }).click();
+  await expect(page).toHaveURL(/\/documents$/);
+  await page.locator('input[type="file"]').setInputFiles({
+    name: 'meeting-notes.txt',
+    mimeType: 'text/plain',
+    buffer: Buffer.from('First imported paragraph\nSecond imported paragraph'),
+  });
+  await expect(page).toHaveURL(/\/documents\/\d+$/);
+  await expect(page.locator('.title-input')).toHaveValue('meeting-notes');
+  await expect(page.locator('.ProseMirror')).toContainText('First imported paragraph');
+  await expect(page.locator('.ProseMirror')).toContainText('Second imported paragraph');
+  await page.getByRole('button', { name: /^save$/i }).click();
+  await expect(page.locator('.save-state')).toContainText('Saved');
+  await page.reload();
+  await expect(page.locator('.ProseMirror')).toContainText('Second imported paragraph');
+});
