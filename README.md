@@ -48,3 +48,14 @@ The API is available at `http://localhost:4000/api/health` after `npm run dev`; 
 ## Commands
 
 `npm run build` builds both applications. `npm test` runs the production builds and Playwright browser test using the default SQLite development database.
+
+## Deployment
+
+The deployment target is Vercel for `frontend/` and Render for `backend/`. The production API uses the existing MySQL adapter; Render does not provide managed MySQL, so provision a hosted MySQL 8 database separately and use its connection values in Render.
+
+1. Create the MySQL database and run `npm run db:migrate --prefix backend` and `npm run db:seed --prefix backend` against it.
+2. Create the Render web service from `render.yaml` and add the MySQL credentials, a strong `JWT_SECRET`, and the deployed Vercel URL as `FRONTEND_URL`.
+3. Deploy `frontend/` on Vercel with `VITE_API_URL` set to the Render API URL without a trailing `/api`.
+4. Verify `https://your-api.example.com/api/health` returns `{ "ok": true, "database": "mysql" }` before opening the Vercel URL.
+
+Local development continues to use native SQLite unless `DB_CLIENT=mysql` is set. No live deployment is claimed until the provider URLs, database migration, authentication, upload, sharing, and production build are manually checked.

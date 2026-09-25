@@ -7,7 +7,8 @@ import Underline from '@tiptap/extension-underline';
 import Heading from '@tiptap/extension-heading';
 import './styles.css';
 
-const API = 'http://localhost:4000/api';
+const API_ROOT = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
+const API = `${API_ROOT}/api`;
 const token = () => localStorage.getItem('token') || '';
 async function request(path: string, options: RequestInit = {}) { const response = await fetch(API + path, { ...options, headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token()}`, ...options.headers } }); const data = await response.json().catch(() => ({})); if (!response.ok) throw new Error(data.error || 'Something went wrong'); return data; }
 function Shell({ children }: { children: React.ReactNode }) { const navigate = useNavigate(); const user = JSON.parse(localStorage.getItem('user') || 'null'); return <div className="app-shell"><header><button className="brand" onClick={() => navigate('/documents')}>papertrail<span>•</span></button>{user && <div className="user-menu"><span>{user.name}</span><button className="ghost" onClick={() => { localStorage.clear(); navigate('/login'); }}>Log out</button></div>}</header>{children}</div>; }
